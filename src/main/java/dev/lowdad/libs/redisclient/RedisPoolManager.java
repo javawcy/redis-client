@@ -52,14 +52,14 @@ public class RedisPoolManager {
         final RedisHostConfigProperties properties = validate(host.name());
         if (pools.containsKey(host.name())) {
             JedisPool jedisPool = pools.get(host.name());
-            return new RedisClient(getInstance(jedisPool, properties.getPassword(), properties.getDb()));
+            return new RedisClient(getInstance(jedisPool, properties.getPassword(), properties.getDb()), curd);
         } else {
             GenericObjectPoolConfig<Jedis> config = new GenericObjectPoolConfig<>();
             config.setMaxIdle(properties.getMaxIdle());
             config.setMaxTotal(properties.getMaxTotal());
             config.setMinIdle(properties.getMinIdle());
             JedisPool jedisPool = this.save(host.name(), new JedisPool(config, properties.getHost(), properties.getPort()));
-            return new RedisClient(getInstance(jedisPool, properties.getPassword(), properties.getDb()));
+            return new RedisClient(getInstance(jedisPool, properties.getPassword(), properties.getDb()), curd);
         }
     }
 }
