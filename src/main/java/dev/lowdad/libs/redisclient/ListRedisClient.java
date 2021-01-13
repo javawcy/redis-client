@@ -16,17 +16,15 @@ public interface ListRedisClient {
      * 从左添加
      * @param key k
      * @param value v
-     * @return 数量
      */
-    long listAdd(String key, String value);
+    void add(String key, String value);
 
     /**
      * 从左批量添加
      * @param key k
      * @param values vs
-     * @return 数量
      */
-    long listAdd(String key, List<String> values);
+    void addAll(String key, List<String> values);
 
     /**
      * 列表切片
@@ -41,31 +39,29 @@ public interface ListRedisClient {
      * 添加到末尾
      * @param key k
      * @param value v
-     * @return long
      */
-    long addListLast(String key, String value);
+    void addLast(String key, String value);
 
     /**
      * 批量添加到末尾
      * @param key k
      * @param values vs
-     * @return long
      */
-    long addListLast(String key, List<String> values);
+    void addLastAll(String key, List<String> values);
 
     /**
      * 弹出队首
      * @param key k
      * @return value
      */
-    String popList(String key);
+    String pop(String key);
 
     /**
      * 弹出队尾
      * @param key k
      * @return value
      */
-    String popListLast(String key);
+    String popLast(String key);
 
     /**
      * 获取下标值
@@ -73,7 +69,7 @@ public interface ListRedisClient {
      * @param index i
      * @return value
      */
-    String getListIndex(String key, int index);
+    String get(String key, int index);
 
     /**
      * 修剪只保留指定区间
@@ -81,5 +77,5 @@ public interface ListRedisClient {
      * @param start 起点
      * @param end 终点
      */
-    void trimList(String key, int start, int end);
+    void trim(String key, int start, int end);
 }

@@ -21,13 +21,13 @@ public class ListRedisClientImpl implements ListRedisClient{
     }
 
     @Override
-    public long listAdd(String key, String value) {
-        return this.jedis.lpush(key, value);
+    public void add(String key, String value) {
+        this.jedis.lpush(key, value);
     }
 
     @Override
-    public long listAdd(String key, List<String> values) {
-        return this.jedis.lpush(key, values.toArray(new String[]{}));
+    public void addAll(String key, List<String> values) {
+        this.jedis.lpush(key, values.toArray(new String[]{}));
     }
 
     @Override
@@ -36,32 +36,32 @@ public class ListRedisClientImpl implements ListRedisClient{
     }
 
     @Override
-    public long addListLast(String key, String value) {
-        return this.jedis.rpush(key, value);
+    public void addLast(String key, String value) {
+        this.jedis.rpush(key, value);
     }
 
     @Override
-    public long addListLast(String key, List<String> values) {
-        return this.jedis.rpush(key, values.toArray(new String[]{}));
+    public void addLastAll(String key, List<String> values) {
+        this.jedis.rpush(key, values.toArray(new String[]{}));
     }
 
     @Override
-    public String popList(String key) {
+    public String pop(String key) {
         return this.jedis.lpop(key);
     }
 
     @Override
-    public String popListLast(String key) {
+    public String popLast(String key) {
         return this.jedis.rpop(key);
     }
 
     @Override
-    public String getListIndex(String key, int index) {
+    public String get(String key, int index) {
         return this.jedis.lindex(key, index);
     }
 
     @Override
-    public void trimList(String key, int start, int end) {
+    public void trim(String key, int start, int end) {
         this.jedis.ltrim(key, start, end);
     }
 }
