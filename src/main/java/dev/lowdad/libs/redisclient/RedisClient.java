@@ -10,49 +10,31 @@ import redis.clients.jedis.Jedis;
  * @author Chongyu
  * @since 2021/1/12
  */
-public class RedisClient {
+public class RedisClient implements AutoCloseable{
 
     private final Jedis jedis;
     private boolean active;
     private final CURDRedisClient curd;
-    private final StringRedisClient string;
     private final ListRedisClient list;
     private final SetRedisClient set;
+    private final BITRedisClient bit;
 
     public RedisClient(Jedis jedis) {
         this.jedis = jedis;
-        this.curd = new CURDRedisClientImpl(jedis);
-        this.string = new StringRedisClientImpl(jedis);
-        this.list = new ListRedisClientImpl(jedis);
-        this.set = new SetRedisClientImpl(jedis);
-        this.active = true;
-    }
-
-    /**
-     * 回收jedis实例
-     */
-    private void close() {
-        if (active) {
-            this.active = false;
-            this.jedis.close();
+        if (this.jedis.ping().equals("PONG")) {
+            this.active = true;
+            this.curd = new CURDRedisClientImpl(jedis);
+            this.list = new ListRedisClientImpl(jedis);
+            this.set = new SetRedisClientImpl(jedis);
+            this.bit = new BITRedisClientImpl(jedis);
+        } else {
+            throw new RedisClientException("conn fail");
         }
     }
-
-    private void validate() {
-        if (!active) {
-            throw new RedisClientException("instance no longer active");
-        }
-    }
-
 
     public CURDRedisClient curd() {
         validate();
         return this.curd;
-    }
-
-    public StringRedisClient string() {
-        validate();
-        return this.string;
     }
 
     public ListRedisClient list() {
@@ -65,11 +47,23 @@ public class RedisClient {
         return this.set;
     }
 
+    public BITRedisClient bit() {
+        validate();
+        return this.bit;
+    }
 
 
+    private void validate() {
+        if (!active) {
+            throw new RedisClientException("instance no longer active");
+        }
+    }
 
-
-
-
-
+    @Override
+    public void close() {
+        if (active) {
+            this.active = false;
+            this.jedis.close();
+        }
+    }
 }
