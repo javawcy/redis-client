@@ -1,8 +1,9 @@
 package dev.lowdad.libs.redisclient;
 
-import com.sun.tools.javac.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 /**
  * <p>
@@ -62,7 +63,7 @@ public class RedisCRUDTests extends RedisClientApplicationTests {
             Assertions.assertEquals(2, redisClient.curd().len(key));
             redisClient.curd().del(key);
             redisClient.curd().mSet("k1", "a", "k2", "b", "k3", "c");
-            Assertions.assertEquals(List.of("a", "b", "c"), redisClient.curd().mGet("k1", "k2", "k3"));
+            Assertions.assertEquals(Arrays.asList("a","b","c"), redisClient.curd().mGet("k1", "k2", "k3"));
             Assertions.assertFalse(redisClient.curd().setNX("k1", "d"));
             Assertions.assertEquals(0, redisClient.curd().mSetNX("k1", "a", "k2", "b", "k3", "c"));
             redisClient.curd().delBatch("k1", "k2", "k3");

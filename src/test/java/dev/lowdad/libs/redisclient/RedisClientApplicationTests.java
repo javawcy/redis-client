@@ -1,8 +1,9 @@
 package dev.lowdad.libs.redisclient;
 
-import com.sun.tools.javac.util.List;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest(classes = {RedisClientConfig.class})
 class RedisClientApplicationTests {
@@ -11,9 +12,10 @@ class RedisClientApplicationTests {
 
     public RedisClientApplicationTests() {
         RedisClientConfigProperties properties = new RedisClientConfigProperties();
-        properties.setHosts(List.of(
-                new RedisHostConfigProperties()
-        ));
+        List<RedisHostConfigProperties> propertiesList = new ArrayList<>();
+        final RedisHostConfigProperties configProperties = new RedisHostConfigProperties();
+        propertiesList.add(configProperties);
+        properties.setHosts(propertiesList);
         this.redisPoolManager = new RedisPoolManager(properties);
     }
 
