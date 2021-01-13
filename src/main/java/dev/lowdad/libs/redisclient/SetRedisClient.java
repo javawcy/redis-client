@@ -19,7 +19,7 @@ public interface SetRedisClient {
      * @param value v
      * @return 数量
      */
-    long sAdd(String key, String value);
+    long add(String key, String value);
 
     /**
      * 批量添加如果不存在
@@ -27,7 +27,7 @@ public interface SetRedisClient {
      * @param value v
      * @return long
      */
-    long sAdd(String key, List<String> value);
+    long addAll(String key, Set<String> value);
 
     /**
      * 删除元素
@@ -35,7 +35,7 @@ public interface SetRedisClient {
      * @param value v
      * @return 删除个数
      */
-    long sRemove(String key, String value);
+    long remove(String key, String value);
 
     /**
      * 批量删除
@@ -43,7 +43,7 @@ public interface SetRedisClient {
      * @param values vs
      * @return 删除全部
      */
-    long sRemoveAll(String key, List<String> values);
+    long removeAll(String key, Set<String> values);
 
     /**
      * 是否存在
@@ -51,35 +51,35 @@ public interface SetRedisClient {
      * @param value v
      * @return boolean
      */
-    boolean sContains(String key, String value);
+    boolean contains(String key, String value);
 
     /**
      * 数量
      * @param key key
      * @return long
      */
-    long sSize(String key);
+    long size(String key);
 
     /**
      * 获取全部
      * @param key k
      * @return Set<String>
      */
-    Set<String> sMembers(String key);
+    Set<String> members(String key);
 
     /**
      * 获取随机成员
      * @param key k
      * @return String
      */
-    String sRandMember(String key);
+    String randMember(String key);
 
     /**
      * 随机弹出
      * @param key k
      * @return String
      */
-    String sRandPop(String key);
+    String randPop(String key);
 
 
     /**
@@ -89,40 +89,40 @@ public interface SetRedisClient {
      * @param key2      2
      * @param moveValue move
      */
-    void sMove(String key1, String key2, String moveValue);
+    void move(String key1, String key2, String moveValue);
 
     /**
      * 取差集
      * @return 差集
      */
-    Set<String> sDiff(String... keys);
+    Set<String> diff(String... keys);
 
     /**
      * 取差集并保存
      * @return long
      */
-    long sDiffAndStore(String newKey, String... keys);
+    long diffAndStore(String newKey, String... keys);
 
     /**
      * 取交集
      * @return Set<String>
      */
-    Set<String> sInter(String... keys);
+    Set<String> inter(String... keys);
 
     /**
      * 取交集并保存
      * @return long
      */
-    long sInterAndStore(String newKey, String... keys);
+    long interAndStore(String newKey, String... keys);
 
     /**
      * 取并集
      */
-    Set<String> sUnion(String... keys);
+    Set<String> union(String... keys);
 
     /**
      * 取并集并保存
      * @return long
      */
-    long sUnionAndStore(String newKey, String... keys);
+    long unionAndStore(String newKey, String... keys);
 }
