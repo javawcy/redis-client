@@ -7,6 +7,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>redis-client</name>
     <description>RedisClient use jedis</description>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>1.8</java.version>
@@ -14,6 +15,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot.version>2.4.1</spring-boot.version>
         <jedis.version>3.1.0</jedis.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencyManagement>

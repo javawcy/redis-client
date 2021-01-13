@@ -1,5 +1,8 @@
 package dev.lowdad.libs.redisclient;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 二进制操作redisClient
@@ -19,6 +22,21 @@ public interface BITRedisClient {
     void set(String key, int offset, boolean value);
 
     /**
+     * 批量设值
+     * @param key k
+     * @param offsetAndValues 位置和值
+     */
+    void setBatch(String key, Map<Integer, Boolean> offsetAndValues);
+
+    /**
+     * 批量获取
+     * @param key key
+     * @param start 起点
+     * @param end 终点
+     */
+    List<Boolean> getAll(String key, int start, int end);
+
+    /**
      * 获取某位值
      * @param key k
      * @param offset 位置
@@ -28,7 +46,7 @@ public interface BITRedisClient {
 
 
     /**
-     * 查询字节总数
+     * 查询字节总数 (true的个数)
      * @param key k
      * @return long
      */
@@ -60,5 +78,5 @@ public interface BITRedisClient {
      * @param newKey 新key
      * @param key 旧key
      */
-    void not(String newKey, String... key);
+    void not(String newKey, String key);
 }

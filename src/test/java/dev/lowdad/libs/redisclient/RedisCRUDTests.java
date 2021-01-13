@@ -14,20 +14,12 @@ import org.junit.jupiter.api.Test;
  */
 public class RedisCRUDTests extends RedisClientApplicationTests {
 
-    private final RedisPoolManager redisPoolManager;
 
-    public RedisCRUDTests() {
-        RedisClientConfigProperties properties = new RedisClientConfigProperties();
-        properties.setHosts(List.of(
-                new RedisHostConfigProperties()
-        ));
-        this.redisPoolManager = new RedisPoolManager(properties);
-    }
 
     @Test
     void testCRUD() {
         try (
-                RedisClient redisClient = redisPoolManager.idle(DefaultRedisHost.DEFAULT)
+                RedisClient redisClient = super.getRedisPoolManager().idle(DefaultRedisHost.DEFAULT)
         ) {
             String key = "hello";
             String value = "world";
