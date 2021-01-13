@@ -18,6 +18,7 @@ public class RedisClient implements AutoCloseable{
     private final ListRedisClient list;
     private final SetRedisClient set;
     private final BITRedisClient bit;
+    private final HashRedisClient hash;
 
     public RedisClient(Jedis jedis) {
         this.jedis = jedis;
@@ -26,6 +27,7 @@ public class RedisClient implements AutoCloseable{
         this.list = new ListRedisClientImpl(jedis);
         this.set = new SetRedisClientImpl(jedis);
         this.bit = new BITRedisClientImpl(jedis);
+        this.hash = new HashRedisClientImpl(jedis);
     }
 
     public CURDRedisClient curd() {
@@ -46,6 +48,11 @@ public class RedisClient implements AutoCloseable{
     public BITRedisClient bit() {
         validate();
         return this.bit;
+    }
+
+    public HashRedisClient hash() {
+        validate();
+        return this.hash;
     }
 
     private void validate() {
