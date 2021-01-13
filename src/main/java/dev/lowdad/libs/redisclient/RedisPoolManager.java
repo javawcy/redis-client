@@ -4,8 +4,8 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -17,49 +17,27 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RedisPoolManager {
 
-    private final RedisClientConfigProperties config;
-    private Map<String, JedisPool> pools = new ConcurrentHashMap<>();
-
+    private final Map<String, JedisPool> pools = new HashMap<>();
     public RedisPoolManager(RedisClientConfigProperties config) {
-        this.config = config;
+        config.getHosts().forEach(host -> {
+            GenericObjectPoolConfig<Jedis> conf = new GenericObjectPoolConfig<>();
+            conf.setMaxIdle(host.getMaxIdle());
+            conf.setMaxTotal(host.getMaxTotal());
+            conf.setMinIdle(host.getMinIdle());
+            JedisPool jedisPool = new JedisPool(conf, host.getHost(), host.getPort(), host.getMaxWaitMills(), host.getPassword(), host.getDb(), host.isSsl());
+            this.pools.put(host.getName(), jedisPool);
+        });
     }
-
-    private RedisHostConfigProperties validate(String hostName) {
-        if (config.getHosts().isEmpty()) {
-            throw new RedisClientException("redis host list is empty");
-        }
-        return config.getHosts().stream()
-                .filter(h -> h.getName().equals(hostName))
-                .findFirst()
-                .orElseThrow(() -> new RedisClientException("host not found!"));
-    }
-
-    private JedisPool save(String name, JedisPool jedisPool) {
-        if (!pools.containsKey(name)) {
-            pools.put(name, jedisPool);
-        }
-        return pools.get(name);
-    }
-
-    private Jedis getInstance(JedisPool pool, String password, int db) {
-        Jedis jedis = pool.getResource();
-        jedis.auth(password);
-        jedis.select(db);
-        return jedis;
-    }
-
-    public RedisClient client(RedisHost host) {
-        final RedisHostConfigProperties properties = validate(host.name());
+    public RedisClient idle(RedisHost host) {
         if (pools.containsKey(host.name())) {
-            JedisPool jedisPool = pools.get(host.name());
-            return new RedisClient(getInstance(jedisPool, properties.getPassword(), properties.getDb()));
+            final Jedis jedis = pools.get(host.name()).getResource();
+            if (jedis.ping().equals("PONG")) {
+                return new RedisClient(jedis);
+            } else {
+                throw new RedisClientException("host connect failed");
+            }
         } else {
-            GenericObjectPoolConfig<Jedis> config = new GenericObjectPoolConfig<>();
-            config.setMaxIdle(properties.getMaxIdle());
-            config.setMaxTotal(properties.getMaxTotal());
-            config.setMinIdle(properties.getMinIdle());
-            JedisPool jedisPool = this.save(host.name(), new JedisPool(config, properties.getHost(), properties.getPort()));
-            return new RedisClient(getInstance(jedisPool, properties.getPassword(), properties.getDb()));
+            throw new RedisClientException("host could not found");
         }
     }
 }

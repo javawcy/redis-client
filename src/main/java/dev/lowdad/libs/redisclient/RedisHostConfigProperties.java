@@ -19,6 +19,15 @@ public class RedisHostConfigProperties {
     private int maxIdle = 10;
     private int minIdle = 3;
     private int maxWaitMills = 3000;
+    private boolean ssl = false;
+
+    public boolean isSsl() {
+        return ssl;
+    }
+
+    public void setSsl(boolean ssl) {
+        this.ssl = ssl;
+    }
 
     public String getPassword() {
         return password;

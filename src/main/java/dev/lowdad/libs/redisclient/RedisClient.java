@@ -21,15 +21,11 @@ public class RedisClient implements AutoCloseable{
 
     public RedisClient(Jedis jedis) {
         this.jedis = jedis;
-        if (this.jedis.ping().equals("PONG")) {
-            this.active = true;
-            this.curd = new CURDRedisClientImpl(jedis);
-            this.list = new ListRedisClientImpl(jedis);
-            this.set = new SetRedisClientImpl(jedis);
-            this.bit = new BITRedisClientImpl(jedis);
-        } else {
-            throw new RedisClientException("conn fail");
-        }
+        this.active = true;
+        this.curd = new CURDRedisClientImpl(jedis);
+        this.list = new ListRedisClientImpl(jedis);
+        this.set = new SetRedisClientImpl(jedis);
+        this.bit = new BITRedisClientImpl(jedis);
     }
 
     public CURDRedisClient curd() {
@@ -51,7 +47,6 @@ public class RedisClient implements AutoCloseable{
         validate();
         return this.bit;
     }
-
 
     private void validate() {
         if (!active) {

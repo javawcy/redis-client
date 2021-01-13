@@ -27,7 +27,7 @@ public class RedisCRUDTests extends RedisClientApplicationTests {
     @Test
     void testCRUD() {
         try (
-                RedisClient redisClient = redisPoolManager.client(DefaultRedisHost.DEFAULT)
+                RedisClient redisClient = redisPoolManager.idle(DefaultRedisHost.DEFAULT)
         ) {
             String key = "hello";
             String value = "world";
